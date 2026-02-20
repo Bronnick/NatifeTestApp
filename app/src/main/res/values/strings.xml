@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NatifeTestApp</string>
     <string name="err_msg">Something went wrong</string>
+    <string name="no_data_msg">No GIFs found</string>
 </resources>

@@ -32,8 +32,11 @@ class AppViewModel(
 
     private var gifInfoJob: Job? = null
 
-    var gifUiState : GifUiState by mutableStateOf(GifUiState.Loading)
+    var gifUiState: GifUiState by mutableStateOf(GifUiState.Loading)
+        private set
 
+    var requestText: String by mutableStateOf("")
+        private set
 
     init {
         getGifInfo("cats", 10)
@@ -60,6 +63,11 @@ class AppViewModel(
             } while (gifUiState is GifUiState.Error)
         }
     }
+
+    fun setReqText(s: String) {
+        requestText = s
+    }
+
 
     companion object {
         val Factory = viewModelFactory {
