@@ -17,8 +17,6 @@ val appContainer by lazy{
 class AppContainer {
     private val baseUrl = "https://api.giphy.com/v1/"
 
-
-
     private val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(

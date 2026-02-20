@@ -38,11 +38,18 @@ class AppViewModel(
     var requestText: String by mutableStateOf("")
         private set
 
+    var limit: Int by mutableStateOf(10)
+
+    var isMenuExtended: Boolean by mutableStateOf(false)
+        private set
+
+
+
     init {
         getGifInfo("cats", 10)
     }
 
-    fun getGifInfo(
+    fun getGifInfo (
         q: String,
         limit: Int
     ) {
@@ -66,6 +73,10 @@ class AppViewModel(
 
     fun setReqText(s: String) {
         requestText = s
+    }
+
+    fun setMenuExtend(newValue: Boolean) {
+        isMenuExtended = newValue
     }
 
 
