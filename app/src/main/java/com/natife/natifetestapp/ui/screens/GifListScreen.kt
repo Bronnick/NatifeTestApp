@@ -1,10 +1,7 @@
 package com.natife.natifetestapp.ui.screens
 
 import android.net.Uri
-import android.os.Build
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Row
@@ -12,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -21,22 +17,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import com.natife.natifetestapp.data.classes.GifInfo
-import coil.ImageLoader.Builder
-import coil.util.DebugLogger
-import coil.ComponentRegistry
-import coil.decode.Decoder
-import coil.request.ImageRequest
-import coil.compose.AsyncImage
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.res.stringResource
+import com.natife.natifetestapp.view_models.GifUiState
 
 
-val testArray = arrayOf(
+/*val testArray = arrayOf(
     GifInfo(
         "e1", "https://media1.giphy.com/media/5nh1ZQPCHUXreebrd7/200w_d.gif"
     ),
@@ -53,32 +45,31 @@ val testArray = arrayOf(
         "e5", "https://media2.giphy.com/media/DjMHR7zvxzoB5vMPa1/giphy.gif?cid=1244a2bc71s9wbjw5sivbm41ckyoowf9ptnr1ffrlanb1noy&ep=v1_gifs_search&rid=giphy.gif&ct=g"
     ),
 
-)
+)*/
 
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+
 @Composable
 fun GifListScreen(
     modifier: Modifier = Modifier,
+    gifUiState: GifUiState,
     onClick: (String) -> Unit,
     imageLoader: ImageLoader
 ) {
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .horizontalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        contentAlignment = Alignment.Center
     ) {
-        testArray.forEach { gifInfo ->
-            GifInfoUi(
-                modifier = Modifier.clickable {
-                    val encoded = Uri.encode(gifInfo.gifUrl)
-                    onClick(encoded ?: "null")
-                },
-                gifInfo = gifInfo,
-                imageLoader = imageLoader
+        when (gifUiState) {
+            is GifUiState.Success -> SuccessScreen (
+                gifList = gifUiState.gifList,
+                imageLoader = imageLoader,
+                onClick = onClick
             )
+            is GifUiState.Error -> ErrorScreen(
+                messageId = gifUiState.messageId
+            )
+            is GifUiState.Loading -> LoadingScreen()
         }
     }
 }
@@ -112,6 +103,66 @@ fun GifInfoUi(
                 .size(160.dp),
             contentScale = ContentScale.Crop,
             imageLoader = imageLoader
+        )
+    }
+}
+
+@Composable
+fun SuccessScreen(
+    gifList: List<GifInfo>,
+    imageLoader: ImageLoader,
+    onClick: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        gifList.forEach { gifInfo ->
+            GifInfoUi(
+                modifier = Modifier.clickable {
+                    val encoded = Uri.encode(gifInfo.gifUrl)
+                    onClick(encoded ?: "null")
+                },
+                gifInfo = gifInfo,
+                imageLoader = imageLoader
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .sizeIn(
+                    minHeight = 100.dp,
+                    minWidth = 100.dp
+                ),
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    messageId: Int
+){
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Text(
+            text = stringResource(id = messageId),
+            textAlign = TextAlign.Center,
         )
     }
 }

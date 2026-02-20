@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NatifeTestApp</string>
+    <string name="err_msg">Something went wrong</string>
 </resources>

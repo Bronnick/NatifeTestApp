@@ -17,7 +17,7 @@ class GifRepository(
         return gifService.getGiphySearchResponse( q, limit).data.map { gif ->
             GifInfo(
                     id = gif.id,
-                    gifUrl = gif.url,
+                    gifUrl = gif.images?.fixedWidth?.url ?: gif.images?.original?.url,
                 )
         }
     }

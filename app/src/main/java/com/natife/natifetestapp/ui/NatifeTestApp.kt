@@ -26,6 +26,5 @@ fun NatifeTestApp(
     ) {
         paddingValues ->
         paddingValues
-        NatifeTestApp()
     }
 }
