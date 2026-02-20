@@ -4,9 +4,10 @@
  ___
 <details>
    <summary>
-     <b>DEMONSTRATION OF HOW THE APP WORKS:</b>
+     <b>SCREENSHOTS:</b>
    </summary>
- ![Recording](/videos/video1.gif) 
+ ![Screenshot1](/screenshots/screenshot1.jpg) 
+ ![Screenshot2](/screenshots/screenshot2.jpg) 
 </details>
 
  ___
