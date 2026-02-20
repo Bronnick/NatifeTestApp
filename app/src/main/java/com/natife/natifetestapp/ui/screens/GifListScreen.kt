@@ -21,9 +21,13 @@ import com.natife.natifetestapp.data.classes.GifInfo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import com.natife.natifetestapp.view_models.GifUiState
 
@@ -77,33 +81,42 @@ fun GifListScreen(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GifInfoUi(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     gifInfo: GifInfo,
     imageLoader: ImageLoader
 ) {
-    val context = LocalContext.current
-    /*val imageLoader = remember {
-        ImageLoader.Builder(context)
-            .components {
-                if (Build.VERSION.SDK_INT >= 28) add(ImageDecoderDecoder.Factory())
-                else add(GifDecoder.Factory())
-            }
-            .build()
-    }*/
-    Row(
-        modifier = Modifier.fillMaxWidth().then(modifier),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Text(text = gifInfo.id.toString(), textAlign = TextAlign.Center)
-        AsyncImage(
-            model = gifInfo.gifUrl,
-            contentDescription = null,
+
+        Row(
             modifier = Modifier
-                .size(160.dp),
-            contentScale = ContentScale.Crop,
-            imageLoader = imageLoader
-        )
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+
+            AsyncImage(
+                model = gifInfo.gifUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.Crop,
+                imageLoader = imageLoader
+            )
+
+            Text(
+                text = gifInfo.id.toString(),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

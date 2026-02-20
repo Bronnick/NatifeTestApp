@@ -24,7 +24,7 @@ fun GifFullScreen(
             model = gifUrl,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             imageLoader = imageLoader
         )
     }
