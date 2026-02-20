@@ -7,6 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import kotlin.lazy
 
+val appContainer by lazy{
+    AppContainer()
+}
+
 class AppContainer {
     private val baseUrl = "api.giphy.com/v1/"
 
