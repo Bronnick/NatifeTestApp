@@ -6,7 +6,7 @@
    <summary>
      <b>DEMONSTRATION OF HOW THE APP WORKS:</b>
    </summary>
- ![Video](/videos/video1.gif) 
+ ![Recording](videos/video1.gif) 
 </details>
 
  ___
