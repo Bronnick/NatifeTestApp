@@ -1,7 +1,6 @@
 package com.natife.natifetestapp.ui.screens
 
 import android.net.Uri
-import android.text.Layout
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.*
@@ -13,14 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import com.natife.natifetestapp.data.classes.GifInfo
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -33,28 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.natife.natifetestapp.view_models.GifUiState
-
-
-/*val testArray = arrayOf(
-    GifInfo(
-        "e1", "https://media1.giphy.com/media/5nh1ZQPCHUXreebrd7/200w_d.gif"
-    ),
-    GifInfo(
-        "e2", "https://media4.giphy.com/media/EcB78c1B6ZrR09SP9c/200w_d.gif?cid=1244a2bc71s9wbjw5sivbm41ckyoowf9ptnr1ffrlanb1noy&ep=v1_gifs_search&rid=200w_d.gif&ct=g"
-    ),
-    GifInfo(
-        "e3", "https://media1.giphy.com/media/oUyf6TtYULiCcGMBzB/200w.gif"
-    ),
-    GifInfo(
-        "e4", "https://media4.giphy.com/media/EcB78c1B6ZrR09SP9c/200w_d.gif?cid=1244a2bc71s9wbjw5sivbm41ckyoowf9ptnr1ffrlanb1noy&ep=v1_gifs_search&rid=200w_d.gif&ct=g"
-    ),
-    GifInfo(
-        "e5", "https://media2.giphy.com/media/DjMHR7zvxzoB5vMPa1/giphy.gif?cid=1244a2bc71s9wbjw5sivbm41ckyoowf9ptnr1ffrlanb1noy&ep=v1_gifs_search&rid=giphy.gif&ct=g"
-    ),
-
-)*/
-
-
 
 @Composable
 fun GifListScreen(

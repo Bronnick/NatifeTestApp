@@ -1,5 +1,6 @@
 package com.natife.natifetestapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,16 +16,14 @@ import com.natife.natifetestapp.ui.screens.GifListScreen
 import com.natife.natifetestapp.ui.screens.MainScreen
 import com.natife.natifetestapp.ui.theme.NatifeTestAppTheme
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             NatifeTestAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen()
-                    innerPadding
-                }
+                MainScreen()
             }
         }
     }
