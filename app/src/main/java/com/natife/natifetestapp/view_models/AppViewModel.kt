@@ -18,6 +18,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.natife.natifetestapp.data.repositories.SettingsRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -27,6 +29,7 @@ sealed interface GifUiState{
         val gifList: List<GifInfo>
     ) : GifUiState
     object Loading : GifUiState
+    object Waiting : GifUiState
     data class Error(
         val messageId: Int
     ) : GifUiState
@@ -40,7 +43,7 @@ class AppViewModel(
     private var isLoading by mutableStateOf(false)
     private var gifInfoJob: Job? = null
 
-    var gifUiState: GifUiState by mutableStateOf(GifUiState.Loading)
+    var gifUiState: GifUiState by mutableStateOf(GifUiState.Waiting)
         private set
 
     var requestText: String by mutableStateOf("")
@@ -56,15 +59,14 @@ class AppViewModel(
 
     init {
         viewModelScope.launch {
-            settingsRepository.limitFlow.collectLatest {
-                limit = it
-            }
-        }
-
-        viewModelScope.launch {
-            settingsRepository.queryFlow.collectLatest {
-                requestText = it
-            }
+            combine(
+                settingsRepository.limitFlow.distinctUntilChanged(),
+                settingsRepository.queryFlow.distinctUntilChanged()
+            ) { savedLimit, savedQuery -> savedLimit to savedQuery }
+                .collectLatest { (savedLimit, savedQuery) ->
+                    limit = savedLimit.coerceIn(5, 20)
+                    requestText = savedQuery
+                }
         }
     }
 

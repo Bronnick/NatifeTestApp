@@ -1,6 +1,7 @@
 package com.natife.natifetestapp.ui.screens
 
 import android.net.Uri
+import android.text.Layout
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.natife.natifetestapp.view_models.GifUiState
 
 
@@ -70,6 +73,9 @@ fun GifListScreen(
                 imageLoader = imageLoader,
                 onClick = onClick
             )
+            is GifUiState.Waiting -> {
+                WaitingScreen()
+            }
             is GifUiState.Error -> ErrorScreen(
                 messageId = gifUiState.messageId
             )
@@ -83,6 +89,7 @@ fun GifListScreen(
 fun GifInfoUi(
     modifier: Modifier = Modifier,
     gifInfo: GifInfo,
+    index: Int,
     imageLoader: ImageLoader
 ) {
 
@@ -113,7 +120,7 @@ fun GifInfoUi(
             )
 
             Text(
-                text = gifInfo.id.toString(),
+                text = "GIF $index",
                 textAlign = TextAlign.Center
             )
         }
@@ -132,13 +139,14 @@ fun SuccessScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        gifList.forEach { gifInfo ->
+        gifList.forEachIndexed { index, gifInfo ->
             GifInfoUi(
                 modifier = Modifier.clickable {
                     val encoded = Uri.encode(gifInfo.gifUrl)
                     onClick(encoded ?: "null")
                 },
                 gifInfo = gifInfo,
+                index = index + 1,
                 imageLoader = imageLoader
             )
         }
@@ -159,6 +167,20 @@ fun LoadingScreen() {
                     minWidth = 100.dp
                 ),
             color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+
+@Composable
+fun WaitingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Find the perfect GIF in seconds.",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 }
