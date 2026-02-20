@@ -1,5 +1,6 @@
 package com.natife.natifetestapp.view_models
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
@@ -10,8 +11,13 @@ import com.natife.natifetestapp.data.repositories.GifRepository
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.natife.natifetestapp.R
-import com.natife.natifetestapp.data.appContainer
+import com.natife.natifetestapp.data.AppContainer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.natife.natifetestapp.data.repositories.SettingsRepository
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -27,9 +33,11 @@ sealed interface GifUiState{
 }
 
 class AppViewModel(
-    private val gifRepository: GifRepository
+    private val gifRepository: GifRepository,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
+    private var isLoading by mutableStateOf(false)
     private var gifInfoJob: Job? = null
 
     var gifUiState: GifUiState by mutableStateOf(GifUiState.Loading)
@@ -39,6 +47,7 @@ class AppViewModel(
         private set
 
     var limit: Int by mutableStateOf(10)
+        private set
 
     var isMenuExtended: Boolean by mutableStateOf(false)
         private set
@@ -46,14 +55,25 @@ class AppViewModel(
 
 
     init {
-        getGifInfo("cats", 10)
+        viewModelScope.launch {
+            settingsRepository.limitFlow.collectLatest {
+                limit = it
+            }
+        }
+
+        viewModelScope.launch {
+            settingsRepository.queryFlow.collectLatest {
+                requestText = it
+            }
+        }
     }
 
     fun getGifInfo (
         q: String,
         limit: Int
     ) {
-
+        if(isLoading) return
+        isLoading = true
         gifUiState = GifUiState.Loading
         gifInfoJob = viewModelScope.launch {
             do {
@@ -68,11 +88,22 @@ class AppViewModel(
                         )
                     }
             } while (gifUiState is GifUiState.Error)
+            isLoading = false
         }
     }
 
     fun setReqText(s: String) {
         requestText = s
+        viewModelScope.launch {
+            settingsRepository.setQuery(s)
+        }
+    }
+
+    fun setNewLimit(newValue: Int) {
+        limit = newValue
+        viewModelScope.launch {
+            settingsRepository.setLimit(newValue)
+        }
     }
 
     fun setMenuExtend(newValue: Boolean) {
@@ -83,8 +114,13 @@ class AppViewModel(
     companion object {
         val Factory = viewModelFactory {
             initializer {
-                val gifRepository = appContainer.gifRepository
-                AppViewModel(gifRepository)
+                val app = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
+                val container = AppContainer(app)
+
+                AppViewModel(
+                    gifRepository = container.gifRepository,
+                    settingsRepository = container.settingsRepository
+                )
             }
         }
     }

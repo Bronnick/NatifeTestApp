@@ -1,7 +1,9 @@
 package com.natife.natifetestapp.data
 
+import android.content.Context
 import com.natife.natifetestapp.BuildConfig
 import com.natife.natifetestapp.data.repositories.GifRepository
+import com.natife.natifetestapp.data.repositories.SettingsRepository
 import com.natife.natifetestapp.network.interceptors.ApiKeyInterceptor
 import com.natife.natifetestapp.network.services.GifService
 import okhttp3.OkHttpClient
@@ -10,11 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import kotlin.lazy
 
+/*
 val appContainer by lazy{
     AppContainer()
 }
+*/
 
-class AppContainer {
+class AppContainer(context: Context) {
     private val baseUrl = "https://api.giphy.com/v1/"
 
     private val retrofit = Retrofit.Builder()
@@ -33,5 +37,9 @@ class AppContainer {
 
     val gifRepository by lazy{
         GifRepository(retrofitService)
+    }
+
+    val settingsRepository by lazy {
+        SettingsRepository(context)
     }
 }

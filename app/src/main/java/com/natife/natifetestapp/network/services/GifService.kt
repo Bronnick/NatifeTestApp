@@ -11,7 +11,5 @@ interface GifService {
     suspend fun getGiphySearchResponse(
         @Query("q") request: String,
         @Query("limit") limit: Int = 10
-    ) : GiphySearchResponse {
-        return GiphySearchResponse()
-    }
+    ) : GiphySearchResponse
 }

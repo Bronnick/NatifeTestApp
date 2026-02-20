@@ -131,8 +131,8 @@ fun MainScreen() {
 
                                         IconButton(
                                             onClick = {
-                                                appViewModel.limit =
-                                                    (appViewModel.limit - 1).coerceIn(5, 20)
+                                                appViewModel.setNewLimit(
+                                                    (appViewModel.limit - 1).coerceIn(5, 20))
                                             },
                                             enabled = appViewModel.limit > 5
                                         ) {
@@ -146,8 +146,8 @@ fun MainScreen() {
 
                                         IconButton(
                                             onClick = {
-                                                appViewModel.limit =
-                                                    (appViewModel.limit + 1).coerceIn(5, 20)
+                                                appViewModel.setNewLimit(
+                                                    (appViewModel.limit + 1).coerceIn(5, 20))
                                             },
                                             enabled = appViewModel.limit < 20
                                         ) {
