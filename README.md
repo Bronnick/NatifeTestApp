@@ -6,8 +6,10 @@
    <summary>
      <b>SCREENSHOTS:</b>
    </summary>
+ 
  ![Screenshot1](/screenshots/screenshot1.jpg) 
  ![Screenshot2](/screenshots/screenshot2.jpg) 
+ 
 </details>
 
  ___
