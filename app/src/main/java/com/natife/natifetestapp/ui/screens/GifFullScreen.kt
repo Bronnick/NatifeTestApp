@@ -14,7 +14,7 @@ import coil.compose.AsyncImage
 @Composable
 fun GifFullScreen(
     gifUrl: String,
-    imageLoader: ImageLoader
+    imageLoader: ImageLoader,
 ) {
 
     Box(

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.natife.natifetestapp.ui.screens.GifListScreen
+import com.natife.natifetestapp.ui.screens.MainScreen
 import com.natife.natifetestapp.ui.theme.NatifeTestAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NatifeTestAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GifListScreen()
+                    MainScreen()
                     innerPadding
                 }
             }

@@ -26,6 +26,6 @@ fun NatifeTestApp(
     ) {
         paddingValues ->
         paddingValues
-        GifListScreen()
+        NatifeTestApp()
     }
 }

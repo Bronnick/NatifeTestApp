@@ -1,5 +1,6 @@
 package com.natife.natifetestapp.ui.screens
 
+import android.net.Uri
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -29,6 +30,11 @@ import coil.ComponentRegistry
 import coil.decode.Decoder
 import coil.request.ImageRequest
 import coil.compose.AsyncImage
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+
 
 val testArray = arrayOf(
     GifInfo(
@@ -53,38 +59,48 @@ val testArray = arrayOf(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GifListScreen(
-    onShowDetails: () -> Unit,
     modifier: Modifier = Modifier,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    onClick: (String) -> Unit,
+    imageLoader: ImageLoader
 ) {
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .horizontalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         testArray.forEach { gifInfo ->
-            GifInfoUi(gifInfo)
+            GifInfoUi(
+                modifier = Modifier.clickable {
+                    val encoded = Uri.encode(gifInfo.gifUrl)
+                    onClick(encoded ?: "null")
+                },
+                gifInfo = gifInfo,
+                imageLoader = imageLoader
+            )
         }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun GifInfoUi(
-    gifInfo: GifInfo
+    modifier: Modifier,
+    gifInfo: GifInfo,
+    imageLoader: ImageLoader
 ) {
     val context = LocalContext.current
-    val imageLoader = remember {
+    /*val imageLoader = remember {
         ImageLoader.Builder(context)
             .components {
                 if (Build.VERSION.SDK_INT >= 28) add(ImageDecoderDecoder.Factory())
                 else add(GifDecoder.Factory())
             }
             .build()
-    }
+    }*/
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -92,7 +108,8 @@ fun GifInfoUi(
         AsyncImage(
             model = gifInfo.gifUrl,
             contentDescription = null,
-            modifier = Modifier.size(160.dp),
+            modifier = Modifier
+                .size(160.dp),
             contentScale = ContentScale.Crop,
             imageLoader = imageLoader
         )
